@@ -1,0 +1,197 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+//usar gcc para entregar el trabajo NO OLVIDAR
+
+typedef struct nodo{
+	int dato;
+	struct nodo *nodosig;
+}lista, aux;
+
+lista *cab;
+
+void insertar (lista **puntero, int numero);
+void visualizar (lista *puntero);
+void eliminar(lista **cab,int numero);
+void ordenar(lista **cab);
+
+int main (void)
+{
+     //eliminar elemento de la lista desde el teclado
+     //esto no es una opcion... siempre al final de cada opcion ORDENAR LA LISTA DINAMICA
+     
+    int vector [] = {30, 21, 65, 2, 44, 100, 0, 12, 69, 4};
+    int opcion,i;
+    lista *n1=NULL;
+    int numero;
+    for(i=0;i<10;i++)
+    insertar(&n1,vector[i]);
+    do{
+       printf("\n\t Lista Enlazada\n\t----------------\n");
+       printf("\n1-. Ingresar Elemento\n");
+       printf("\n2-. Eliminar Elemento\n");
+       printf("\n3-. Revisar estado de la lista\n");
+       printf("\n4-. Salir\n\n");
+       scanf("%d", &opcion);
+       system ("cls"); //luego poner esto para gcc system("clear")
+       switch(opcion){
+                      case 1: system ("cls"); //luego poner esto para gcc system("clear")
+                              printf("\nIntroduzca numero: ");
+                              scanf("%d",&numero);
+                              insertar(&n1,numero);
+                              ordenar(&cab);
+                              system ("cls"); //luego poner esto para gcc system("clear")
+                              break;
+                             
+                      case 2: ordenar(&cab);
+                              system ("cls"); //luego poner esto para gcc system("clear")
+                              printf("\n");
+                              printf("Ingrese un numero que desee eliminar: "); 
+                              scanf("%d", &numero); 
+                              eliminar(&n1, numero);
+                              system ("cls"); //luego poner esto para gcc system("clear")
+                              break; 
+                              
+                                                             
+                      case 3: ordenar(&cab);
+                              printf("\n\n");
+                              visualizar(n1);
+                              printf("\n");
+                              system ("pause"); // luego poner esto para gcc getchar();
+                              system ("cls"); //luego poner esto para gcc system("clear")
+                              break;
+                                                     
+                      case 4: exit(0);
+                              break;
+                      }
+       }while(opcion > 0 && opcion < 4 );
+  system ("pause"); // luego poner esto para gcc getchar();
+ }
+     
+void insertar (lista **puntero,int numero)
+{
+     lista *cab,*fin;
+     cab=*puntero;
+     if(cab==NULL)
+     {
+                 cab=malloc(sizeof(lista));
+                 if(cab!=NULL)
+                 {
+                             cab->dato=numero;
+                             cab->nodosig=NULL;
+                             *puntero=cab;
+                 }
+     }
+     else
+     {
+         while(cab->nodosig != NULL)
+         {
+                          cab=cab->nodosig;
+         }
+         fin=malloc(sizeof(lista));
+         if(fin != NULL)
+         {
+               fin->dato=numero;
+               fin->nodosig=NULL;
+               cab->nodosig=fin;
+         }
+     }
+}
+
+void visualizar(lista *puntero)
+{
+     while(puntero != NULL)
+     {
+                   printf("%d -> ", puntero->dato);
+                   puntero = puntero->nodosig;
+     }
+     printf("\n");
+}
+
+void eliminar(lista **cab, int numero)
+{
+     lista *ant, *pos;
+     int encontrado=0;
+     ant = NULL;
+     pos = *cab;
+     while((!encontrado)&&(pos != NULL))
+     {
+      encontrado =(numero<=(pos->dato));
+      if(!encontrado)
+      {
+      ant = pos;              //esto parece que esta malo
+      pos = pos->nodosig;    //esto parece que esta malo  revisando solo entra al if de encontrado...
+      }                     //si no lo encuentra deberia recorrer la lista hasta encontrarlo
+     }
+     if(encontrado)
+     encontrado =(numero == (pos->dato));
+     if(encontrado)
+     {
+      if(ant == NULL)
+      *cab = pos->nodosig;
+      else
+      ant->nodosig = pos->nodosig;
+      free(pos);
+     } 
+}
+
+void ordenar(lista **cab)
+{
+     lista* aux;
+     lista* temp;
+     int vaux;
+     aux=(lista *)malloc(sizeof(lista));
+     temp=(lista *)malloc(sizeof(lista));
+     aux=cab;
+     while (aux!=NULL)
+     {
+           temp = aux;
+           while(temp->nodosig !=NULL)
+           {
+           printf("entro al segundo while");
+            temp=temp->nodosig;
+            if(aux->dato>temp->dato)
+            {
+             vaux=aux->dato;
+             aux->dato=temp->dato;
+             temp->dato=vaux;
+            }
+           }
+           aux=aux->nodosig;
+     }
+}
+
+/*void eliminar (lista **cab, int numero)
+{
+ lista *ant, *pos;
+ ant = NULL;
+ pos = *cab;
+ if(numero == pos ->dato)
+ {
+  *cab = ant;
+  *cab = pos->nodosig;
+  free(ant);         
+ }
+ else{
+      if(numero < pos->dato)
+      {
+           while(numero!= pos ->dato)
+           {
+                          ant= pos;
+                          pos = pos->nodosig;
+           }
+           else{
+                if(numero > pos->dato)
+                {
+                 while(numero!= pos ->dato)
+                 {
+                      ant= pos;
+                      pos = pos->nodosig;
+                 }
+                }     
+           }
+      }
+ }
+}
+*/
